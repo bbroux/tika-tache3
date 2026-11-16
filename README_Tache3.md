@@ -4,7 +4,7 @@ J'ai commencé en ajoutant Semgrep directement à partir des Github actions. En 
 
     1. Faire l'évaluation sur les "push": Je ne voulais pas le faire à chaque pull request et ensuite le faire au push suivant aussi. De plus, je ne voulais que l'action roule à chaque jour selon un horaire, car je ne l'utilise pas dans un contexte qui le nécéssite et donc ca ne me servirait pas.
 
-    2. Évaluation utilisant scan et p/java: Je n'avais pas besoin de me créer un compte Semgrep et comme nous sommes en java, on évalue les règles propres à ce language. 
+    2. Évaluation utilisant scan et p/java et p/security-audit: Comme nous sommes en java, on évalue les règles propres à ce language. De plus, le security-audit nous permet d'évaluer les risques à la sécurité. 
 
     3. Utilisation de la mention "--error": Pour signaler des erreurs et faire échouer le build si des problèmes sont détectés. 
 
@@ -39,6 +39,14 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
         On veut construire un objet java à partir d'un fichier sérializé donné par un utilisateur, mais on ne connait pas les intentions de cet utilisateur. À partir du fichier sérialisé, un attaquant pourrait accéder à l'application et, par exemple, exécuter du code ou accéder à des informations privilégiées. 
         Avec l'objet ObjectInputStream de Java, on a ce danger, mais tika n'utilise pas cette façon de désérialiser. On va donc l'introduire dans tika-serialization/src/main/java/org/apache/tika/config/loader/TikaObjectMapperFactory.java, où l'on fait déjà de la désérialisation avec d'autres méthodes. On ajoute la méthode deserializeObject, dans laquelle on va créér un ObjectInputStream et tenter de le lire afin de déclencher l'erreur suivante de Semgrep: java.lang.security.audit.object-deserialization.object-deserialization 
+
+        Le run Semgrep #6 fonctionne, et on reconnait l'erreur. 
+
+    2. Manque de validation pour certificats
+
+        On peut implémenter un gestionnaire de certificats qui ne fait aucune/pas assez de vérifications et donc qui pourrait permettre a un adversaire d'intercepter de l'information ou de faire des partages dangereux. Dans tika-core/src/main/java/org/apache/tika/parser/NetworkParser.java, on fait déjà des connexions réseau, donc il est naturel d'ajouter la vulnérabilité ici. On ajoute une méthode qui retourne un OK pour toutes les demandes, donc qui valide tous les certificats. Ceci devrait lancer une vulnérabilité de type java.lang.security.audit.crypto.ssl.insecure-trust-manager.insecure-trust-manager dans semgrep. 
+
+
 
 
 

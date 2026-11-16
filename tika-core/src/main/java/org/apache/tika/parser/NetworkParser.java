@@ -86,6 +86,21 @@ public class NetworkParser implements Parser {
 
     }
 
+    //Vulnérabilité 2: créer un X509 TrustManager qui ne vérifie rien 
+    private static X509TrustManager createTrustManager() {
+    return new X509TrustManager() {
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+
+        public void checkClientTrusted(
+                X509Certificate[] certs, String authType) {}
+
+        public void checkServerTrusted(
+                X509Certificate[] certs, String authType) {}
+    };
+}
+
     private static class ParsingTask implements Runnable {
 
         private final TikaInputStream input;
