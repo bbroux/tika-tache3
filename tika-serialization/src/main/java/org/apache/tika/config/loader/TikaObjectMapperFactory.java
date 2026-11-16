@@ -170,10 +170,10 @@ public class TikaObjectMapperFactory {
         }
     }
 
-    public static void deserializeObject(InputStream input) throws IOException, ClassNotFoundException
+    public static Object deserializeObject(InputStream input) throws IOException, ClassNotFoundException
     {
         ObjectInputStream newObject = new ObjectInputStream(input);
         //Vulnérabilité 1: On tente de lire un nouvel objet créé à partir d'une source non-fiable
-        newObject.readObject();
+        return newObject.readObject();
     }
 }
