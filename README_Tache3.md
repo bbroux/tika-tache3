@@ -12,7 +12,7 @@ Pour vérifier l'ajout, une première analyse est faite lors du commit du fichie
 
 # Rapport initial 
 
-Le premier run nous affiche 11 problèmes détectés. On lui demande de générer un fichier .json avec le log du run. (voir tika/run_initial.json) 
+Le premier run nous affiche 11 problèmes détectés. On lui demande de générer un fichier .json avec le log du run. (voir tika/semgrep-report-initial.json) 
 Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
     1. java.lang.security.audit.xxe.saxparserfactory-disallow-doctype-decl-missing.             saxparserfactory-disallow-doctype-decl-missing
@@ -34,5 +34,7 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
     On update aussi la configuration semgrep avec --baseline-commit <SHA-commit-initial> pour que par la suite, semgrep détecte seulement les nouvelles vulnérabilités et ne fasse pas échouer le build pour ces 11 vulnérabilités déja trouvées. On peut vérifier que ceci fonctionne lorsqu'on fait le commit du changement dans semgrep.yml. 
 
 ## Ajout de vulnérabilités
+
+    
 
 
