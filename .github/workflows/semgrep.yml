@@ -26,4 +26,14 @@ jobs:
     steps:
       # Checkout project source
       - uses: actions/checkout@v4
-      - run: semgrep scan --config p/java --error
+        with: 
+          fetch-depth: 0
+      - run: semgrep scan --config p/java --json --output semgrep-report.json --error
+
+      - name: Upload Semgrep report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-initial-report
+          path: semgrep-report.json
+
