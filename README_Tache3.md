@@ -12,7 +12,7 @@ Pour vérifier l'ajout, une première analyse est faite lors du commit du fichie
 
 # Rapport initial 
 
-Le premier run nous affiche 11 problèmes détectés. On lui demande de générer un fichier .json avec le log du run. (voir tika/semgrep-report-initial.json) 
+Le premier run nous affiche 11 problèmes détectés (Semgrep #2 dans Github actions). On lui demande de générer un fichier .json avec le log du run. (voir tika/semgrep-report-initial.json) 
 Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
     1. java.lang.security.audit.xxe.saxparserfactory-disallow-doctype-decl-missing.             saxparserfactory-disallow-doctype-decl-missing
@@ -31,10 +31,15 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
     8. java.lang.security.audit.crypto.unencrypted-socket.unencrypted-socket
     
-    On update aussi la configuration semgrep avec --baseline-commit <SHA-commit-initial> pour que par la suite, semgrep détecte seulement les nouvelles vulnérabilités et ne fasse pas échouer le build pour ces 11 vulnérabilités déja trouvées. On peut vérifier que ceci fonctionne lorsqu'on fait le commit du changement dans semgrep.yml. 
+    On update aussi la configuration semgrep avec --baseline-commit <SHA-commit-initial> pour que par la suite, semgrep détecte seulement les nouvelles vulnérabilités et ne fasse pas échouer le build pour ces 11 vulnérabilités déja trouvées. On peut vérifier que ceci fonctionne lorsqu'on fait le commit du changement dans semgrep.yml (Semgrep #3 dans Github actions). Le run Semgrep est vert, c'est-à-dire qu'on a pas trouvé de nouvelle vulnérabilité en comparant avec la version initiale, qui en avait 11. C'est un bon signe, mais on va valider que le tout fonctionne en ajoutant des nouvelles vulnérabilités. 
 
 ## Ajout de vulnérabilités
 
-    
+    1. Désérialisation dangereuse
+
+        On veut construire un objet java à partir d'un fichier sérializé donné par un utilisateur, mais on ne connait pas les intentions de cet utilisateur. À partir du fichier sérialisé, un attaquant pourrait accéder à l'application et, par exemple, exécuter du code ou accéder à des informations privilégiées. 
+        Avec l'objet ObjectInputStream de Java, on a ce danger, mais tika n'utilise pas cette façon de désérialiser. On va donc l'introduire dans tika-serialization/src/main/java/org/apache/tika/config/loader/TikaObjectMapperFactory.java, où l'on fait déjà de la désérialisation avec d'autres méthodes. On ajoute la méthode deserializeObject, dans laquelle on va créér un ObjectInputStream et tenter de le lire afin de déclencher l'erreur suivante de Semgrep: java.lang.security.audit.object-deserialization.object-deserialization 
+
+
 
 
