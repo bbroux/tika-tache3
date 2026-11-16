@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 0
-      - run: semgrep scan --config p/java --json --output semgrep-report.json --error
+      - run: semgrep scan --config p/java --json --output semgrep-report.json --baseline-commit e4bd0cf676d63fbecbfa4f3ab8d4140e20fb8d9e --error
 
       - name: Upload Semgrep report
         if: always()
