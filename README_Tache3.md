@@ -46,6 +46,15 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
         On peut implémenter un gestionnaire de certificats qui ne fait aucune/pas assez de vérifications et donc qui pourrait permettre a un adversaire d'intercepter de l'information ou de faire des partages dangereux. Dans tika-core/src/main/java/org/apache/tika/parser/NetworkParser.java, on fait déjà des connexions réseau, donc il est naturel d'ajouter la vulnérabilité ici. On ajoute une méthode qui retourne un OK pour toutes les demandes, donc qui valide tous les certificats. Ceci devrait lancer une vulnérabilité de type java.lang.security.audit.crypto.ssl.insecure-trust-manager.insecure-trust-manager dans semgrep. 
 
+        Ceci fonctionne, on a 2 erreurs flaggées ici, mais on ne peut pas en retirer une car sinon le tout ne compilera pas. On laisse donc les 2 erreurs et on devrait, a la fin, se retrouver avec 8 erreurs rapportées par semgrep. 
+
+    3. Injection dans une commande système
+
+        Lorsqu'une entrée utilisateur est ensuite passée à une commande système, un adversaire pourrait y glisser des commandes selon ce qu'il veut faire. Dans tika-parsers\tika-parsers-standard\tika-parsers-standard-modules\tika-parser-ocr-module\src\main\java\org\apache\tika\parser\ocr\TesseractOCRParser.java, il y a déjà des commandes systèmes pour faire rouler tesseract. Il est donc possible de faire des modifications ici pour introduire une vulnérabilité. 
+        Je vais donc, dans la méthode doOCR, rajouter un paramètre d'entrée utilisateur et concatener ceci avec la commande qui est utilisée pour créer le processus système. 
+
+        
+
 
 
 

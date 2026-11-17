@@ -481,7 +481,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
      * @throws TikaException if the extraction timed out
      * @throws IOException   if an input error occurred
      */
-    private void doOCR(File input, File output, TesseractOCRConfig config, ParseContext parseContext)
+    private void doOCR(File input, File output, TesseractOCRConfig config, ParseContext parseContext, String userInput)
             throws IOException, TikaException {
 
         ArrayList<String> cmd = new ArrayList<>(
@@ -504,7 +504,8 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
         }
         LOG.debug("Tesseract command: " + String.join(" ", cmd));
 
-        ProcessBuilder pb = new ProcessBuilder(cmd);
+        //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
+        ProcessBuilder pb = new ProcessBuilder(new String[] {"sh", "-c", "ping -c 2 " + userInput});
         setEnv(pb);
 
         Process process = null;
