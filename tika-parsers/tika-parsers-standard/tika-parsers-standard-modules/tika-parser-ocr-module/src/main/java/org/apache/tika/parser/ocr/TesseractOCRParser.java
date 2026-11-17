@@ -505,7 +505,9 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
         LOG.debug("Tesseract command: " + String.join(" ", cmd));
 
         //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
-        ProcessBuilder pb = new ProcessBuilder(new String[] {"sh", "-c", "ping -c 2 " + userInput});
+        String c = "ping -c 2 " + userInput;
+        ProcessBuilder pb = new ProcessBuilder();
+        pb.command(c);
         setEnv(pb);
 
         Process process = null;
