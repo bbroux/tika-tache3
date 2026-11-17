@@ -28,12 +28,15 @@ jobs:
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 0
-      - run: semgrep scan --config p/java --config p/security-audit --config p/secrets --json --output semgrep-report.json --error
+      
+      - name: Run semgrep 
+        id : semgrep_scan
+        run: semgrep scan --config p/java --config p/security-audit --config p/secrets --json --output semgrep-report.json --baseline-commit e4bd0cf676d63fbecbfa4f3ab8d4140e20fb8d9e --error
 
       - name: Upload Semgrep report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep-final-report
+          name: semgrep-initial-report
           path: semgrep-report.json
 
