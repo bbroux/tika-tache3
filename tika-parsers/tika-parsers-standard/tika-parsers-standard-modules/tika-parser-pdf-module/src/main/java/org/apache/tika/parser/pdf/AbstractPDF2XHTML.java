@@ -45,6 +45,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
@@ -133,10 +136,6 @@ import org.apache.tika.sax.EmbeddedContentHandler;
 import org.apache.tika.sax.XHTMLContentHandler;
 import org.apache.tika.utils.ExceptionUtils;
 import org.apache.tika.utils.StringUtils;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 class AbstractPDF2XHTML extends PDFTextStripper {
 
@@ -1003,7 +1002,7 @@ class AbstractPDF2XHTML extends PDFTextStripper {
         }
     }
 
-    private void extractJavaScriptFromNameTreeNode(PDDocument pdf) throws SAXException {
+    private void extractJavaScriptFromNameTreeNode(PDDocument pdf) throws SAXException  {
         if (! config.isExtractActions()) {
             return;
         }
@@ -1110,7 +1109,15 @@ class AbstractPDF2XHTML extends PDFTextStripper {
 
         //Vulnerabilite 9 : Ajout d'un script engine injection
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-        engine.eval(js);
+
+        try 
+        {
+            engine.eval(js);
+        } 
+        catch (ScriptException e) 
+        {
+            throw new IOException("Unable to execute JavaScript", e);
+        }
 
         if (embeddedDocumentExtractor.shouldParseEmbedded(m)) {
             try (TikaInputStream tis = TikaInputStream.get(js.getBytes(StandardCharsets.UTF_8))) {

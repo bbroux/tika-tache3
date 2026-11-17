@@ -102,15 +102,11 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 # Rapport final 
 
 Pour produire un rapport final, on va retirer le check de baseline-SHA pour le moment, afin de calculer la différence entre le rapport initial et final (avec changements). 
-Le rapport final devrait compter 10 erreurs de plus que celui qu'on avait au début, pour un total de 21 détections. On va donc modifier le semgrep.yml pour retirer ceci (on pourra le remettre par la suite) 
+Le rapport final devrait compter 10 erreurs de plus que celui qu'on avait au début, pour un total d'au moins 21 détections. On va donc modifier le semgrep.yml pour retirer ceci (on pourra le remettre par la suite) 
 
-
-
+Le rapport est ajouté au projet (voir tika/semgrep-final-report.json). On obtient un total de 29 détections Semgrep, avec les vulnérabilités ajoutées qui sont bien détectées par Semgrep. On a 8 vulnérabilités de plus qui ne sont pas expliquées par nos changements, et qui appartiennent à des classes qu'on a pas évaluées. On a ajouté entre temps les règles de p/secrets et de p/security-audit, donc les erreurs appartenant à ces classes de règles n'étaient pas détectées au début et le sont maintenant. 
 
 ## Tests et humour
 
-Pour ajouter quelque chose de simple et humoristique, j'ai décidé de déclencher un RickRoll quand Semgrep ne passe pas, car on sait déjà que ce sera activé pour ce projet. Pour faire ceci, on ajoute un github actions qui s'appelle Rickroll, et on voit que la configuration est assez simple. 
-
- 
-
+Pour 
 
