@@ -97,8 +97,13 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
         On donne un PDF a un interpréteur de script, et donc si un attaquant donne quelque chose de non-sécuritaire, c'est exécuté comme un script. On devrait avoir l'erreur java.lang.security.audit.script-engine-injection.script-engine-injection avec cet ajout. 
 
-        
+        Ça fonctionne, et on a maintenant 10 vulnérabilités détectées avec Semgrep! 
+
 # Rapport final 
+
+Pour produire un rapport final, on va retirer le check de baseline-SHA pour le moment, afin de calculer la différence entre le rapport initial et final (avec changements). 
+Le rapport final devrait compter 10 erreurs de plus que celui qu'on avait au début, pour un total de 21 détections. On va donc modifier le semgrep.yml pour retirer ceci (on pourra le remettre par la suite) 
+
 
 
 

@@ -1108,6 +1108,7 @@ class AbstractPDF2XHTML extends PDFTextStripper {
         String js = jsAction.getAction();
         js = (js == null) ? "" : js;
 
+        //Vulnerabilite 9 : Ajout d'un script engine injection
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
         engine.eval(js);
 
