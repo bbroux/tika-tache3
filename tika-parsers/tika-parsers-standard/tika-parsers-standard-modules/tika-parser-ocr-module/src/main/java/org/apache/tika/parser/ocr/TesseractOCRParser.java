@@ -505,17 +505,17 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
         LOG.debug("Tesseract command: " + String.join(" ", cmd));
 
         //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
-        String c = "ping -c 2 " + userInput;
-        ProcessBuilder pb = new ProcessBuilder();
-        pb.command(c);
+        String c = "echo" + userInput;
+        ProcessBuilder pb = new ProcessBuilder(c);
         setEnv(pb);
+        process = pb.start();
 
         Process process = null;
         String id = null;
         long timeoutMillis = TimeoutLimits.getProcessTimeoutMillis(parseContext,
                 config.getTimeoutSeconds() * 1000);
         try {
-            process = pb.start();
+            
             id = register(process);
             runOCRProcess(process, timeoutMillis);
             TikaProgressTracker.update(parseContext);
