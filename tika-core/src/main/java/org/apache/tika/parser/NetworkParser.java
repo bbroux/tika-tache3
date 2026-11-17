@@ -77,7 +77,7 @@ public class NetworkParser implements Parser {
             URL url = uri.toURL();
             URLConnection connection = url.openConnection();
             //Vulnérabilité #5, on ajoute une authorisation en clair dans le code 
-            connection.setRequestProperty("Authorization", "motDePasse")
+            connection.setRequestProperty("Authorization", "ghp_1234567890abcdef1234567890abcdef1234");
             connection.setDoOutput(true);
             connection.connect();
             try (InputStream input = connection.getInputStream()) {
