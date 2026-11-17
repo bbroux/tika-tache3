@@ -66,7 +66,8 @@ public class InputStreamDigester implements Digester {
         try {
             Provider provider = getProvider();
             if (provider == null) {
-                return MessageDigest.getInstance(algorithm);
+                //Vulnérabilité 7: Weak Hash
+                return MessageDigest.getInstance("SHA-1");
             } else {
                 return MessageDigest.getInstance(algorithm, provider);
             }

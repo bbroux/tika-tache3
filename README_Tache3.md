@@ -73,6 +73,11 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
         Dans la classe tika-parsers\tika-parsers-standard\tika-parsers-standard-modules\tika-parser-pdf-module\src\main\java\org\apache\tika\parser\pdf\XFAExtractor.java, 
         on extrait d'un PDF un formulaire XFA. On parse ceci en XML. Par contre, comme le formulaire XFA pourrait être compromis, il faut faire des validations de sécurité avant de pouvoir créer notre XML. Si on ne fait pas de vérifications, Semgrep reconnait ceci avec la mention java.lang.security.xmlinputfactory-possible-xxe.xmlinputfactory-possible-xxe. On va donc modifier la méthode "extract()", pour introduire ce type de vulnérabilité. On remplace le "getXMLInputFactory()" par "newFactory()", et on va ajouter des propriétés à cette new factory qui laisseront passer les fichiers externes, ce qui devrait créer notre alerte semgrep. 
 
+        Ça fonctionne, et on a maintenant 6 erreurs semgrep détectées (voir run semgrep #13)
+
+    7. Fonction de hachage faible
+
+        Ici, on veut introduire une fonction de hachage faible que Semgrep saura reconnaître. Dans la classe, tika-core\src\main\java\org\apache\tika\digest\InputStreamDigester.java, on utilise un MessageDigest pour créer un hash selon un algorithme donné. Si on lui passe un algorithme de hachage faible, Semgrep reconnaît le problème. On va donc essayer de lui passer SHA-1, qui est reconnu comme une fonction de hachage faible. 
 
  
 

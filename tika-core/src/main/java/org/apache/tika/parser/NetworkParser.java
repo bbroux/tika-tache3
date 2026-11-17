@@ -42,6 +42,9 @@ import org.apache.tika.sax.TaggedContentHandler;
 import org.apache.tika.sax.TeeContentHandler;
 import org.apache.tika.utils.XMLReaderUtils;
 
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
+
 
 public class NetworkParser implements Parser {
 
