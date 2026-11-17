@@ -389,7 +389,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
                                 "User has selected to preprocess images, " +
                                         "but I can't find ImageMagick." +
                                         "Backing off to original file.");
-                        doOCR(input.toFile(), tmpOCROutputFile, config, parseContext);
+                        doOCR(input.toFile(), tmpOCROutputFile, config, parseContext, "probleme");
                     } else {
                         // copy the contents of the original input file into a temporary file
                         // which will be preprocessed for OCR
@@ -402,7 +402,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
                         }
                     }
                 } else {
-                    doOCR(input.toFile(), tmpOCROutputFile, config, parseContext);
+                    doOCR(input.toFile(), tmpOCROutputFile, config, parseContext, "probleme");
                 }
 
                 String extension = config.getPageSegMode().equals("0") ? "osd" :
@@ -505,12 +505,10 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
         LOG.debug("Tesseract command: " + String.join(" ", cmd));
 
         //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
-        String c = "echo" + userInput;
-        ProcessBuilder pb = new ProcessBuilder(c);
-        setEnv(pb);
-        process = pb.start();
+        String comm = "echo" + userInput;
+        ProcessBuilder pb = new ProcessBuilder("sh", "-c", comm);
+        Process process = pb.start();
 
-        Process process = null;
         String id = null;
         long timeoutMillis = TimeoutLimits.getProcessTimeoutMillis(parseContext,
                 config.getTimeoutSeconds() * 1000);
