@@ -73,20 +73,21 @@ public abstract class CryptoParser extends DelegatingParser {
                       ParseContext context) throws IOException, SAXException, TikaException {
         try {
             Cipher cipher;
-                //Ajouter AES-CBC avec padding
+            if (provider != null) {
+                //Ajouter 
                 cipher = Cipher.getInstance("AES/ECB/NoPadding");
+            } else {
+                cipher = Cipher.getInstance("AES/ECB/NoPadding");
+            }
+
             Key key = context.get(Key.class);
-            
             if (key == null) {
                 throw new EncryptedDocumentException("No decryption key provided");
             }
 
             AlgorithmParameters params = context.get(AlgorithmParameters.class);
             SecureRandom random = context.get(SecureRandom.class);
-
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            
-            /*if (params != null && random != null) {
+            if (params != null && random != null) {
                 cipher.init(Cipher.DECRYPT_MODE, key, params, random);
             } else if (params != null) {
                 cipher.init(Cipher.DECRYPT_MODE, key, params);
@@ -94,7 +95,7 @@ public abstract class CryptoParser extends DelegatingParser {
                 cipher.init(Cipher.DECRYPT_MODE, key, random);
             } else {
                 cipher.init(Cipher.DECRYPT_MODE, key);
-            }*/
+            }
 
             try (TikaInputStream decrypted = TikaInputStream.get(
                     new CipherInputStream(tis, cipher))) {
