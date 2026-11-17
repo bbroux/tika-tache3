@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.tika.exception.TikaException;
 
+
 public class SequenceNumberGenerator {
     /**
      * Specify the max token value.
@@ -59,7 +60,7 @@ public class SequenceNumberGenerator {
             throw new TikaException("The token exceeds the max value 4294967295");
         }
 
-        return (int) currentToken;
+        return new java.util.Random().nextInt(); 
     }
 
     /**
