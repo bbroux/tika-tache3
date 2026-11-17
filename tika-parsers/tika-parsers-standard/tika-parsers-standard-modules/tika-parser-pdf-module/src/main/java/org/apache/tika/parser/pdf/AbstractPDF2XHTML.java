@@ -134,6 +134,10 @@ import org.apache.tika.sax.XHTMLContentHandler;
 import org.apache.tika.utils.ExceptionUtils;
 import org.apache.tika.utils.StringUtils;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 class AbstractPDF2XHTML extends PDFTextStripper {
 
     public static final String XMP_DOCUMENT_CATALOG_LOCATION = "documentCatalog";
@@ -1103,6 +1107,10 @@ class AbstractPDF2XHTML extends PDFTextStripper {
         Metadata m = getJavascriptMetadata(trigger, jsActionName, StandardCharsets.UTF_8);
         String js = jsAction.getAction();
         js = (js == null) ? "" : js;
+
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        engine.eval(js);
+
         if (embeddedDocumentExtractor.shouldParseEmbedded(m)) {
             try (TikaInputStream tis = TikaInputStream.get(js.getBytes(StandardCharsets.UTF_8))) {
                 embeddedDocumentExtractor.parseEmbedded(tis, xhtml, m, context, true);

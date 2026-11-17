@@ -16,6 +16,10 @@
  */
 package org.apache.tika.config.loader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -27,11 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.apache.tika.exception.TikaConfigException;
 import org.apache.tika.serialization.ComponentNameResolver;
 import org.apache.tika.serialization.TikaModule;
-
-//imports pour introduire vulnérabilité #1
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.IOException;
 
 /**
  * Factory for creating ObjectMappers configured for Tika serialization.
