@@ -64,8 +64,14 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
     5. Ajout d'information privilégiée dans le code
 
         Lorsqu'on met de l'information qui devrait rester secrète dans notre code, le module secrets de semgrep le reconnait, et signale un danger. Il ne faut pas stocker cette information dans le code, car un adversaire pourrait la récupérer et l'utiliser de façon malveillante. Il est préférable de stocker ces informations dans une variable environnement, par exemple. On peut faire ceci dans la classe NetworkParser.java, qu'on a modifié plus tôt pour la vulnérabilité 2. On ajoute une propriété à la connection avec un URL, et cette propriété définit une authentification "hard-coded". 
-        
-         
+
+        La vulnérabilité n'est pas détectée, et je pense que c'est parce que les règles sont incluses dans Semgrep Pro, qui n'est pas la version que j'utilise. Je ne sais pas si ça aurait fonctionné de toute manière, car les règles de "secrets" sont ciblées à des contextes spécifiques et dans le Registry il semble juste avoir une règle pour HttpUrlConnection. On avait modifié un objet UrlConnection. 
+        Passons à une prochaine vulnérabilité. 
+
+    6. Parse non sécuritaire de PDF -> XML 
+
+        Dans la classe tika-parsers\tika-parsers-standard\tika-parsers-standard-modules\tika-parser-pdf-module\src\main\java\org\apache\tika\parser\pdf\XFAExtractor.java, 
+        on extrait d'un PDF un formulaire XFA. On parse ceci en XML. Par contre, comme le formulaire XFA pourrait être compromis, il faut faire des validations de sécurité avant de pouvoir créer notre XML. Si on ne fait pas de vérifications, Semgrep reconnait ceci avec la mention java.lang.security.xmlinputfactory-possible-xxe.xmlinputfactory-possible-xxe. On va donc modifier la méthode "extract()", pour introduire ce type de vulnérabilité. On remplace le "getXMLInputFactory()" par "newFactory()", et on va ajouter des propriétés à cette new factory qui laisseront passer les fichiers externes, ce qui devrait créer notre alerte semgrep. 
 
 
  

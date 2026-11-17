@@ -34,6 +34,8 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.XHTMLContentHandler;
 import org.apache.tika.utils.XMLReaderUtils;
 
+import javax.xml.stream.XMLInputFactory;
+
 /**
  * This class offers an initial capability to
  * scrape text containing elements out of XFA, and
@@ -95,8 +97,14 @@ class XFAExtractor {
             //
             //As a final step, dump the merged fields and the values.
 
+
+            //Vulnérabilité 6: Parseur XML non sécuritaire
+            XMLInputFactory factory = XMLInputFactory.newFactory();
+
+            factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true); 
+
             XMLStreamReader reader =
-                    XMLReaderUtils.getXMLInputFactory(context).createXMLStreamReader(xfaIs);
+                    factory.createXMLStreamReader(xfaIs);
             while (reader.hasNext()) {
                 switch (reader.next()) {
                     case XMLStreamConstants.START_ELEMENT:
