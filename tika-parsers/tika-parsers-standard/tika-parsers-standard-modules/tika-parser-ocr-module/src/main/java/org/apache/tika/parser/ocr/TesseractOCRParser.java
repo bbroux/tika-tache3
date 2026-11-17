@@ -506,7 +506,8 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
 
         //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
         String comm = "echo" + userInput;
-        ProcessBuilder pb = new ProcessBuilder("sh", "-c", comm);
+        ProcessBuilder pb = new ProcessBuilder();
+        pb.command("sh", "-c", comm);
         Process process = pb.start();
 
         String id = null;
