@@ -24,8 +24,10 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Set;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CloseShieldInputStream;
@@ -41,9 +43,6 @@ import org.apache.tika.mime.MediaType;
 import org.apache.tika.sax.TaggedContentHandler;
 import org.apache.tika.sax.TeeContentHandler;
 import org.apache.tika.utils.XMLReaderUtils;
-
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
 
 
 public class NetworkParser implements Parser {

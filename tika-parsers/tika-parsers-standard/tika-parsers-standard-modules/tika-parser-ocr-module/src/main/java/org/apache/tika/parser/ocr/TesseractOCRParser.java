@@ -389,7 +389,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
                                 "User has selected to preprocess images, " +
                                         "but I can't find ImageMagick." +
                                         "Backing off to original file.");
-                        doOCR(input.toFile(), tmpOCROutputFile, config, parseContext, "probleme");
+                        doOCR(input.toFile(), tmpOCROutputFile, config, parseContext);
                     } else {
                         // copy the contents of the original input file into a temporary file
                         // which will be preprocessed for OCR
@@ -402,7 +402,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
                         }
                     }
                 } else {
-                    doOCR(input.toFile(), tmpOCROutputFile, config, parseContext, "probleme");
+                    doOCR(input.toFile(), tmpOCROutputFile, config, parseContext);
                 }
 
                 String extension = config.getPageSegMode().equals("0") ? "osd" :
@@ -481,7 +481,7 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
      * @throws TikaException if the extraction timed out
      * @throws IOException   if an input error occurred
      */
-    private void doOCR(File input, File output, TesseractOCRConfig config, ParseContext parseContext, String userInput)
+    private void doOCR(File input, File output, TesseractOCRConfig config, ParseContext parseContext)
             throws IOException, TikaException {
 
         ArrayList<String> cmd = new ArrayList<>(
@@ -504,8 +504,8 @@ public class TesseractOCRParser extends AbstractExternalProcessParser implements
         }
         LOG.debug("Tesseract command: " + String.join(" ", cmd));
 
-        //Vulnérabilité #3: Ajouter l'input utilisateur à la commande
-        String comm = "echo" + userInput;
+        //Vulnérabilité #3: Ajouter l'input utilisateur à la commande - pas fonctionnel pour l'instant
+        String comm = "echo";
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("sh", "-c", comm);
         Process process = pb.start();
