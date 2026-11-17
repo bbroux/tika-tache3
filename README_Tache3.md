@@ -53,10 +53,19 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
         Lorsqu'une entrée utilisateur est ensuite passée à une commande système, un adversaire pourrait y glisser des commandes selon ce qu'il veut faire. Dans tika-parsers\tika-parsers-standard\tika-parsers-standard-modules\tika-parser-ocr-module\src\main\java\org\apache\tika\parser\ocr\TesseractOCRParser.java, il y a déjà des commandes systèmes pour faire rouler tesseract. Il est donc possible de faire des modifications ici pour introduire une vulnérabilité. 
         Je vais donc, dans la méthode doOCR, rajouter un paramètre d'entrée utilisateur et concatener ceci avec la commande qui est utilisée pour créer le processus système. 
 
-        
+        Après quelques essais différents, semgrep ne semble pas reconnaître le problème, même lorsque mon implémentation est très similaire à l'exemple donné dans le Registry Semgrep. Je vais tenter d'introduire une prochaine vulnérabilité pour l'instant. 
+
+    4. Génération aléatoire prévisible
+
+        Ici, on va essayer d'introduire un générateur aléatoire, qui ne sera pas vraiment aléatoire. La règle java.lang.security.audit.crypto.weak-random.weak-random reconnait l'utilisation de Math.Random() et de java.util.Random(). Ces fonctions peuvent être introduites dans plusieurs classes différentes, mais la classe tika-parsers\tika-parsers-standard\tika-parsers-standard-modules\tika-parser-microsoft-module\src\main\java\org\apache\tika\parser\microsoft\onenote\fsshttpb\util\SequenceNumberGenerator.java semble être une classe candidate car elle sert déjà à générer un nombre. On va retourner un résultat de java.util.Random().nextInt() à la sortie de la méthode "getCurrentToken()". 
+
+        L'erreur est bien reconnue par Semgrep au moment de l'exécution. 
+
+    5. Ajout d'information privilégiée dans le code
+
+        Lorsqu'on met de l'information qui devrait rester secrète dans notre code, le module secrets de semgrep le reconnait, et signale un danger. Il ne faut pas stocker cette information dans le code, car un adversaire pourrait la récupérer et l'utiliser de façon malveillante. Il est préférable de stocker ces informations dans une variable environnement, par exemple. On peut faire ceci dans la classe NetworkParser.java, qu'on a modifié plus tôt pour la vulnérabilité 2. On ajoute une propriété à la connection avec un URL, et cette propriété définit une authentification "hard-coded".  
 
 
-
-
+ 
 
 
