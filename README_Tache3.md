@@ -77,7 +77,13 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
 
     7. Fonction de hachage faible
 
-        Ici, on veut introduire une fonction de hachage faible que Semgrep saura reconnaître. Dans la classe, tika-core\src\main\java\org\apache\tika\digest\InputStreamDigester.java, on utilise un MessageDigest pour créer un hash selon un algorithme donné. Si on lui passe un algorithme de hachage faible, Semgrep reconnaît le problème. On va donc essayer de lui passer SHA-1, qui est reconnu comme une fonction de hachage faible. 
+        Ici, on veut introduire une fonction de hachage faible que Semgrep saura reconnaître. Dans la classe, tika-core\src\main\java\org\apache\tika\digest\InputStreamDigester.java, on utilise un MessageDigest pour créer un hash selon un algorithme donné. Si on lui passe un algorithme de hachage faible, Semgrep reconnaît le problème. On va donc essayer de lui passer SHA-1, qui est reconnu comme une fonction de hachage faible. Il devrait nous retourner l'erreur java.lang.security.audit.crypto.use-of-sha1.use-of-sha1
+
+        Ça fonctionne, et on obtient un total de 9 détections avec Semgrep #14. 
+
+    8. CBC padding oracle
+
+        Dans le protocole de cryptographie CBC, on ajoute parfois un padding à la fin pour pouvoir chiffrer des messages de longueur aléatoire avec une clé de taille fixe. Si le programme donne de l'information sur la validité du padding avant que la clé soit acceptée, un adversaire pourrait accéder à de l'information sur la clé secrète en sachant si le padding est valide/invalide. On va donc introduire ce genre de vulnérabilité. Dans la classe tika-core\src\main\java\org\apache\tika\parser\CryptoParser.java, on utilise déjà des méthodes de chiffrement, donc c'est un environnement logique pour l'introduction de cette vulnérabilité. On devrait avoir une détection de type: cbc-padding-oracle.
 
  
 
