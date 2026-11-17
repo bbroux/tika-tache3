@@ -75,9 +75,9 @@ public abstract class CryptoParser extends DelegatingParser {
             Cipher cipher;
             if (provider != null) {
                 //Ajouter AES-CBC avec padding
-                cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             } else {
-                cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             }
 
             Key key = context.get(Key.class);
