@@ -84,6 +84,7 @@ Les erreurs détectées par semgrep initialement sont de 8 types différents:
     8. CBC padding oracle
 
         Dans le protocole de cryptographie CBC, on ajoute parfois un padding à la fin pour pouvoir chiffrer des messages de longueur aléatoire avec une clé de taille fixe. Si le programme donne de l'information sur la validité du padding avant que la clé soit acceptée, un adversaire pourrait accéder à de l'information sur la clé secrète en sachant si le padding est valide/invalide. On va donc introduire ce genre de vulnérabilité. Dans la classe tika-core\src\main\java\org\apache\tika\parser\CryptoParser.java, on utilise déjà des méthodes de chiffrement, donc c'est un environnement logique pour l'introduction de cette vulnérabilité. On devrait avoir une détection de type: cbc-padding-oracle.
+        Après 2 essais, 1 avec CBC et un avec ECB, on n'a pas d'erreur détectée par Semgrep. 
 
  
 
